@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Weather App</title>
+    </head>
+    <style>
+        #header{
+            width:100%;
+            height:100px;
+            background-color: black;
+            color: white;
+            font-size: xx-large;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #container{
+            width:50%;
+            margin:20px 25%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #result{
+            width:50%;
+            min-height: 400px;
+            margin: 20px 25%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            
+        }
+        .item{
+            color:black;
+        }
+    </style>
+    <body>
+        <div id="header">
+            Weather App
+        </div>
+        <div id="container">
+            <input type="text" placeholder="Enter City Name" id="city">
+            <input type="button" value="Search" name="Search" id="Searchbttn">
+        </div>
+        <div id="result">
+            
+        </div>
+    </body>
+    <script>
+        var City =document.getElementById("city");
+        var Searchbttn = document.getElementById("Searchbttn");
+        var Result=document.getElementById("result")
+        var result=[];
+
+        Searchbttn.addEventListener("click", function(e){
+            e.preventDefault();
+            fetch("https://community-open-weather-map.p.rapidapi.com/weather?q="+City.value+/*this.state.location+*/"&lat=0&lon=0&id=2172797&lang=null&units=%22metric%22%20or%20%22imperial%22&mode=xml%2C%20html", {
+                "method": "GET",
+                "headers": {
+                    "x-rapidapi-key": "c8cb6b8cccmshc02b57f0b5a8c98p1516cdjsnb64d72a5ad33",
+                    "x-rapidapi-host": "community-open-weather-map.p.rapidapi.com"
+                }
+            })
+            .then(response=>{
+                return response.json()
+            })
+            .then(data=>{
+                console.log(data)
+                result=[data]
+                console.log(result)
+                renderlist();
+            })
+            .catch(error=>{
+                console.log(error)
+            })
+        })
+
+        function renderlist(){
+            var res="";
+            
+           for(let i=0; i<result.length;i++){
+            var single=result[i];
+            console.log(single)
+            var html=`<div class="item">
+                        Weather : ${single.weather[0].main}
+                      </div>
+                      <div class="item">
+                        Description : ${single.weather[0].description}
+                      </div>
+                      <div class="item">
+                        Wind Speed : ${single.wind.speed}
+                      </div>`
+            res+=html
+           }
+           Result.innerHTML = res;
+        }
+    </script>
+</html>
